@@ -1,0 +1,64 @@
+--- /home/su_dalle-lucca-tosi/Downloads/baf/BESSER-Agentic-Framework-2.1.0/besser/agent/nlp/ner/simple_ner.py	2025-02-21 16:58:57.000000000 +0100
++++ ./simple_ner.py	2025-09-12 15:02:52.281766648 +0200
+@@ -14,6 +14,9 @@
+ from besser.agent.nlp.utils import find_first_temp, replace_temp_value_in_sentence, replace_value_in_sentence, \
+     value_in_sentence
+ 
++import re
++from typing import List
++
+ if TYPE_CHECKING:
+     from besser.agent.core.agent import Agent
+     from besser.agent.core.state import State
+@@ -61,7 +64,6 @@
+                 values.extend(synonyms)
+                 for v in values:
+                     if v in entity_values_dict:
+-                        # TODO: duplicated value in entity
+                         pass
+                     else:
+                         entity_values_dict[v] = entity_entry.value
+@@ -130,6 +132,13 @@
+     ):
+         super().__init__(nlp_engine, agent)
+ 
++    def extract_bracketed_entities(self, sentence: str) -> List[str]:
++        """
++        Extract entities wrapped in square brackets [...] from the sentence.
++        Returns a list of unique values (without brackets).
++        """
++        return list(set(re.findall(r'\[([^\[\]]+)\]', sentence)))
++
+     def train(self) -> None:
+         for entity in self._agent.entities:
+             entity.process_entity_entries(self._nlp_engine)
+@@ -139,6 +148,7 @@
+         for intent in state.intents:
+             intent_matches: list[MatchedParameter] = []
+             ner_sentence: str = message
++            
+             # Match custom entities
+             processed_values: bool
+             pre_processing = self._nlp_engine.get_property(nlp.NLP_PRE_PROCESSING)
+@@ -149,9 +159,21 @@
+                 processed_values = False
+             all_entity_values: dict[str, tuple[list[IntentParameter], str]] = \
+                 get_custom_entity_values_dict(intent, processed_values)
++            
+             temps: dict[str, tuple[list[IntentParameter], str]] = {}
+             temp_template = r'/temp{}/'
+             temp_count = 1
++
++            # Extract ad-hoc entities
++            bracketed_entities = self.extract_bracketed_entities(message)
++            for idx, value in enumerate(bracketed_entities):
++                # Create a pseudo IntentParameter for the ad-hoc entity
++                param_name = f"ad_hoc"
++                intent_matches.append(MatchedParameter(param_name, value, {"ad_hoc": True}))
++                # Optionally, replace the bracketed text with uppercase marker
++                ner_sentence = ner_sentence.replace(f"[{value}]", param_name.upper())
++
++
+             for value, (intent_parameters, entry_value) in sorted(all_entity_values.items(),
+                                                             key=lambda x: (len(x[0]), x[0].casefold()), reverse=True):
+                 # TODO: This approach doesn't allow 2 repetitions of the same value in a sentence
