@@ -1,2 +1,14 @@
-# PrivateNL2CYPHER
-Privacy-aware approach to query property graphs using LLMs
+# Ask Safely – Experimental Code
+
+This repository contains the experimental implementation and materials used in the article **Ask Safely: Privacy-Aware LLM Query Generation for Knowledge Graphs**.
+For the production-ready version of Ask Safely, please refer to:
+
+👉 https://github.com/BESSER-PEARL/BESSER-Ask-Safely
+
+To reproduce the experiments, simply install the dependencies from requirements.txt, apply the simple_ner.patch, and run the notebook MetaQA-GPT.ipynb.
+
+## Citation
+
+If you use this code, please cite the article:
+
+Tosi, M. D. L., & Cabot, J. (2025). Ask Safely: Privacy-Aware LLM Query Generation for Knowledge Graphs. arXiv preprint arXiv:2512.04852. https://arxiv.org/abs/2512.04852
