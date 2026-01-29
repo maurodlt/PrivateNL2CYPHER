@@ -5,7 +5,15 @@ For the production-ready version of Ask Safely, please refer to:
 
 👉 https://github.com/BESSER-PEARL/BESSER-Ask-Safely
 
-To reproduce the experiments, simply install the dependencies from requirements.txt, apply the simple_ner.patch, and run the notebook MetaQA-GPT.ipynb.
+To reproduce the experiments, simply install the dependencies from requirements.txt, apply the simple_ner.patch, and run the notebook [`MetaQA-GPT.ipynb`](MetaQA-GPT.ipynb).
+
+The privacy analysis can be visualized in the following notebooks:
+- [`Leakage_Test.ipynb`](Leakage_Test.ipynb)
+- [`Mutual_Information.ipynb`](Mutual_Information.ipynb)
+- [`Token_exposure.ipynb`](Token_exposure.ipynb)
+
+Finally, the manual count of the errors was performed in
+[`VisualizeErrors.ipynb`](VisualizeErrors.ipynb).
 
 ## Citation
 
